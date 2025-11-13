@@ -2144,17 +2144,17 @@
     // Cron helpers
     function scheduleToCron(frequency, time, day) {
       const [hour, minute] = time.split(':').map(Number);
-      if (frequency === 'hourly') return '0 * * * *';
-      if (frequency === 'daily') return `${minute} ${hour} * * *`;
-      if (frequency === 'weekly') return `${minute} ${hour} * * ${day}`;
-      return '0 0 * * *';
+      if (frequency === 'hourly') return '0 0 * * * *';
+      if (frequency === 'daily') return `0 ${minute} ${hour} * * *`;
+      if (frequency === 'weekly') return `0 ${minute} ${hour} * * ${day}`;
+      return '0 0 0 * * *';
     }
 
     function cronToSchedule(cron) {
       const parts = cron.split(' ');
-      if (parts.length !== 5) return { frequency: 'daily', time: '00:00', day: '0' };
+      if (parts.length !== 6) return { frequency: 'daily', time: '00:00', day: '0' };
       
-      const [minute, hour, , , dayOfWeek] = parts;
+      const [second, minute, hour, , , dayOfWeek] = parts;
       const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
       
       if (hour === '*') return { frequency: 'hourly', time: '00:00', day: '0' };
